@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Guess-to-Pass Probability</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.5;
+      }
+      body {
+        margin: 0;
+        background: #f7f7fb;
+        color: #1f1f1f;
+      }
+      main {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 32px 20px 40px;
+      }
+      header {
+        margin-bottom: 24px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 2rem;
+      }
+      p {
+        margin: 0;
+        color: #4a4a4a;
+      }
+      .card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 10px 30px rgba(31, 31, 31, 0.08);
+      }
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      input {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid #d2d2dc;
+        font-size: 1rem;
+        background: #ffffff;
+      }
+      .result {
+        margin-top: 24px;
+        padding: 16px;
+        border-radius: 12px;
+        background: #f0f4ff;
+        border: 1px solid #c9d8ff;
+      }
+      .result h2 {
+        margin: 0 0 8px;
+        font-size: 1.25rem;
+      }
+      .result strong {
+        font-size: 1.5rem;
+        color: #1b3a8a;
+      }
+      .note {
+        margin-top: 12px;
+        font-size: 0.9rem;
+        color: #5a5a5a;
+      }
+      footer {
+        margin-top: 24px;
+        font-size: 0.85rem;
+        color: #6d6d6d;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #141722;
+          color: #f5f6fa;
+        }
+        p {
+          color: #c7cad4;
+        }
+        .card {
+          background: #1e2233;
+          box-shadow: none;
+          border: 1px solid #2f3550;
+        }
+        input {
+          background: #22263a;
+          border-color: #363d59;
+          color: #f5f6fa;
+        }
+        .result {
+          background: #1b254d;
+          border-color: #2b3a78;
+        }
+        .result strong {
+          color: #8bb0ff;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Guess-to-Pass Probability</h1>
+        <p>
+          Estimate the chance of passing a multiple-choice test by random guessing.
+        </p>
+      </header>
+
+      <section class="card">
+        <div class="grid">
+          <div>
+            <label for="passScore">Pass score (%)</label>
+            <input id="passScore" type="number" min="0" max="100" step="0.1" value="60" />
+          </div>
+          <div>
+            <label for="items">Number of items (n)</label>
+            <input id="items" type="number" min="1" step="1" value="50" />
+          </div>
+          <div>
+            <label for="options">Options per item (k)</label>
+            <input id="options" type="number" min="2" step="1" value="4" />
+          </div>
+        </div>
+
+        <div class="result" aria-live="polite">
+          <h2>Chance of passing by guessing</h2>
+          <strong id="probability">--</strong>
+          <div class="note" id="details"></div>
+          <div class="note" id="assumptions"></div>
+        </div>
+      </section>
+
+      <footer>
+        Uses the binomial distribution: sum of probabilities of getting enough answers correct.
+      </footer>
+    </main>
+
+    <script>
+      const passScoreInput = document.getElementById("passScore");
+      const itemsInput = document.getElementById("items");
+      const optionsInput = document.getElementById("options");
+      const probabilityOutput = document.getElementById("probability");
+      const detailsOutput = document.getElementById("details");
+      const assumptionsOutput = document.getElementById("assumptions");
+
+      function logFactorial(n) {
+        let total = 0;
+        for (let i = 2; i <= n; i += 1) {
+          total += Math.log(i);
+        }
+        return total;
+      }
+
+      function logBinomial(n, k) {
+        if (k < 0 || k > n) {
+          return -Infinity;
+        }
+        return logFactorial(n) - logFactorial(k) - logFactorial(n - k);
+      }
+
+      function logSumExp(values) {
+        const maxVal = Math.max(...values);
+        if (!Number.isFinite(maxVal)) {
+          return -Infinity;
+        }
+        let total = 0;
+        for (const value of values) {
+          total += Math.exp(value - maxVal);
+        }
+        return maxVal + Math.log(total);
+      }
+
+      function computeProbability(passScore, n, k) {
+        const p = 1 / k;
+        const minCorrect = Math.ceil((passScore / 100) * n);
+        const logTerms = [];
+        for (let i = minCorrect; i <= n; i += 1) {
+          const logProb =
+            logBinomial(n, i) +
+            i * Math.log(p) +
+            (n - i) * Math.log(1 - p);
+          logTerms.push(logProb);
+        }
+        const logTotal = logSumExp(logTerms);
+        return {
+          probability: Math.exp(logTotal),
+          minCorrect,
+        };
+      }
+
+      function formatPercent(value) {
+        if (!Number.isFinite(value)) {
+          return "--";
+        }
+        return `${(value * 100).toFixed(4)}%`;
+      }
+
+      function update() {
+        const passScore = Number(passScoreInput.value);
+        const n = Math.floor(Number(itemsInput.value));
+        const k = Math.floor(Number(optionsInput.value));
+
+        if (!Number.isFinite(passScore) || !Number.isFinite(n) || !Number.isFinite(k)) {
+          probabilityOutput.textContent = "--";
+          detailsOutput.textContent = "Enter valid numeric values.";
+          assumptionsOutput.textContent = "";
+          return;
+        }
+
+        if (passScore < 0 || passScore > 100 || n < 1 || k < 2) {
+          probabilityOutput.textContent = "--";
+          detailsOutput.textContent = "Pass score must be 0-100, n ≥ 1, and k ≥ 2.";
+          assumptionsOutput.textContent = "";
+          return;
+        }
+
+        const { probability, minCorrect } = computeProbability(passScore, n, k);
+        probabilityOutput.textContent = formatPercent(probability);
+        detailsOutput.textContent = `Need at least ${minCorrect} correct out of ${n}.`;
+        assumptionsOutput.textContent = `Assumes random guessing with p = 1/${k} per item.`;
+      }
+
+      passScoreInput.addEventListener("input", update);
+      itemsInput.addEventListener("input", update);
+      optionsInput.addEventListener("input", update);
+      update();
+    </script>
+  </body>
+</html>
