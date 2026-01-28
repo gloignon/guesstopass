@@ -5,149 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Guess-to-Pass Probability</title>
 
-    <style>
-      :root {
-        color-scheme: light dark;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        line-height: 1.5;
-      }
+  <style>
+  :root {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.5;
+  }
 
-      body {
-        margin: 0;
-        background: #f7f7fb;
-        color: #1f1f1f;
-      }
+  body {
+    margin: 0;
+    background: #141722;
+    color: #f5f6fa;
+  }
 
-      main {
-        max-width: 720px;
-        margin: 0 auto;
-        padding: 32px 20px 40px;
-      }
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 32px 20px 40px;
+  }
 
-      header {
-        margin-bottom: 24px;
-      }
+  header {
+    margin-bottom: 24px;
+  }
 
-      h1 {
-        margin: 0 0 8px;
-        font-size: 2rem;
-      }
+  h1 {
+    margin: 0 0 8px;
+    font-size: 2rem;
+    color: #ffffff;
+  }
 
-      p {
-        margin: 0;
-        color: #4a4a4a;
-      }
+  p {
+    margin: 0;
+    color: #c7cad4;
+  }
 
-      .card {
-        background: #ffffff;
-        border-radius: 16px;
-        padding: 24px;
-        box-shadow: 0 10px 30px rgba(31, 31, 31, 0.08);
-      }
+  .card {
+    background: #1e2233;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid #2f3550;
+  }
 
-      .grid {
-        display: grid;
-        gap: 25px;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      }
+  .grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
 
-      label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 6px;
-      }
+  .grid > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+  }
 
-      input[type="number"],
-      input[type="range"] {
-        width: 100%;
-        margin-bottom: 6px;
-        padding: 8px 10px;
-        border-radius: 10px;
-        border: 1px solid #d2d2dc;
-        font-size: 1rem;
-        background: #ffffff;
-      }
+  label {
+    font-weight: 600;
+    color: #ffffff;
+  }
 
-      .result {
-        margin-top: 24px;
-        padding: 16px;
-        border-radius: 12px;
-        background: #f0f4ff;
-        border: 1px solid #c9d8ff;
-      }
+  /* NUMBER INPUTS */
+  input[type="number"] {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid #363d59;
+    background: #22263a;
+    color: #f5f6fa;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
 
-      .result h2 {
-        margin: 0 0 8px;
-        font-size: 1.25rem;
-      }
+  /* SLIDERS */
+  input[type="range"] {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-      .result strong {
-        font-size: 1.5rem;
-        color: #1b3a8a;
-      }
+  input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 6px;
+    background: #363d59;
+    border-radius: 3px;
+  }
 
-      .note {
-        margin-top: 8px;
-        font-size: 0.9rem;
-        color: #5a5a5a;
-      }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #8bb0ff;
+    border-radius: 50%;
+    margin-top: -5px;
+    cursor: pointer;
+  }
 
-      footer {
-        margin-top: 24px;
-        font-size: 0.85rem;
-        color: #6d6d6d;
-      }
+  input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 6px;
+    background: #363d59;
+    border-radius: 3px;
+  }
 
-      @media (prefers-color-scheme: dark) {
-        body {
-          background: #141722;
-          color: #f5f6fa;
-        }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #8bb0ff;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+  }
 
-        p {
-          color: #c7cad4;
-        }
+  .result {
+    margin-top: 24px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #1b254d;
+    border: 1px solid #2b3a78;
+  }
 
-        .card {
-          background: #1e2233;
-          box-shadow: none;
-          border: 1px solid #2f3550;
-        }
+  .result h2 {
+    margin: 0 0 8px;
+    font-size: 1.25rem;
+    color: #ffffff;
+  }
 
-        input {
-          background: #22263a;
-          border-color: #363d59;
-          color: white;
-        }
+  .result strong {
+    font-size: 1.6rem;
+    color: #8bb0ff;
+  }
 
-        .result {
-          background: #1b254d;
-          border-color: #2b3a78;
-        }
+  .note {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #c7cad4;
+  }
 
-        .result strong {
-          color: #8bb0ff;
-        }
-      }
-
-      input[type="number"] {
-        width: 4em;
-}
-
-
-      .grid > div {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-      input[type="range"] {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-}
-    </style>
+  footer {
+    margin-top: 24px;
+    font-size: 0.85rem;
+    color: #9aa0b4;
+  }
+</style>
   </head>
 
   <body>
