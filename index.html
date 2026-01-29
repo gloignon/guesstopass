@@ -5,150 +5,155 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Guess-to-Pass Probability</title>
 
-  <style>
-  :root {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.5;
-  }
+    <style>
+      :root {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.5;
+      }
 
-  body {
-    margin: 0;
-    background: #141722;
-    color: #f5f6fa;
-  }
+      body {
+        margin: 0;
+        background: #141722;
+        color: #f5f6fa;
+      }
 
-  main {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 32px 20px 40px;
-  }
+      main {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 32px 20px 40px;
+      }
 
-  header {
-    margin-bottom: 24px;
-  }
+      header {
+        margin-bottom: 24px;
+      }
 
-  h1 {
-    margin: 0 0 8px;
-    font-size: 2rem;
-    color: #ffffff;
-  }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 2rem;
+        color: #ffffff;
+      }
 
-  p {
-    margin: 0;
-    color: #c7cad4;
-  }
+      p {
+        margin: 0;
+        color: #c7cad4;
+      }
 
-  .card {
-    background: #1e2233;
-    border-radius: 16px;
-    padding: 24px;
-    border: 1px solid #2f3550;
-  }
+      .card {
+        background: #1e2233;
+        border-radius: 16px;
+        padding: 24px;
+        border: 1px solid #2f3550;
+      }
 
-  .grid {
-    display: grid;
-    gap: 24px;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  }
+      .grid {
+        display: grid;
+        gap: 24px;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      }
 
-  .grid > div {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    overflow: hidden;
-  }
+      .grid > div {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        overflow: hidden;
+      }
 
-  label {
-    font-weight: 600;
-    color: #ffffff;
-  }
+      label {
+        font-weight: 600;
+        color: #ffffff;
+      }
 
-  /* NUMBER INPUTS */
-  input[type="number"] {
-    width: 100%;
-    padding: 8px 10px;
-    border-radius: 10px;
-    border: 1px solid #363d59;
-    background: #dedede;
-    font-size: 1rem;
-    box-sizing: border-box;
-  }
+      input[type="number"] {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 10px;
+        border: 1px solid #363d59;
+        background: #dedede;
+        font-size: 1rem;
+        box-sizing: border-box;
+      }
 
-  /* SLIDERS */
-  input[type="range"] {
-    display: block;
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+      input[type="range"] {
+        display: block;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
 
-  input[type="range"]::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 6px;
-    background: #363d59;
-    border-radius: 3px;
-  }
+      input[type="range"]::-webkit-slider-runnable-track {
+        height: 6px;
+        background: #363d59;
+        border-radius: 3px;
+      }
 
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    background: #8bb0ff;
-    border-radius: 50%;
-    margin-top: -5px;
-    cursor: pointer;
-  }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        background: #8bb0ff;
+        border-radius: 50%;
+        margin-top: -5px;
+        cursor: pointer;
+      }
 
-  input[type="range"]::-moz-range-track {
-    width: 100%;
-    height: 6px;
-    background: #363d59;
-    border-radius: 3px;
-  }
+      input[type="range"]::-moz-range-track {
+        height: 6px;
+        background: #363d59;
+        border-radius: 3px;
+      }
 
-  input[type="range"]::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    background: #8bb0ff;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-  }
+      input[type="range"]::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        background: #8bb0ff;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+      }
 
-  .result {
-    margin-top: 24px;
-    padding: 16px;
-    border-radius: 12px;
-    background: #1b254d;
-    border: 1px solid #2b3a78;
-  }
+      .options {
+        margin-top: 20px;
+      }
 
-  .result h2 {
-    margin: 0 0 8px;
-    font-size: 1.25rem;
-    color: #ffffff;
-  }
+      .options label {
+        font-weight: normal;
+        color: #c7cad4;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
 
-  .result strong {
-    font-size: 1.6rem;
-    color: #8bb0ff;
-  }
+      .result {
+        margin-top: 24px;
+        padding: 16px;
+        border-radius: 12px;
+        background: #1b254d;
+        border: 1px solid #2b3a78;
+      }
 
-  .note {
-    margin-top: 8px;
-    font-size: 0.9rem;
-    color: #c7cad4;
-  }
+      .result h2 {
+        margin: 0 0 8px;
+        font-size: 1.25rem;
+        color: #ffffff;
+      }
 
-  footer {
-    margin-top: 24px;
-    font-size: 0.85rem;
-    color: #9aa0b4;
-  }
-</style>
+      .result strong {
+        font-size: 1.6rem;
+        color: #8bb0ff;
+      }
+
+      .note {
+        margin-top: 8px;
+        font-size: 0.9rem;
+        color: #c7cad4;
+      }
+
+      footer {
+        margin-top: 24px;
+        font-size: 0.85rem;
+        color: #9aa0b4;
+      }
+    </style>
   </head>
 
   <body>
@@ -179,6 +184,13 @@
           </div>
         </div>
 
+        <div class="options">
+          <label>
+            <input id="allowRounding" type="checkbox" checked />
+            Allow rounding at the cut score (e.g., 59.8% → 60%)
+          </label>
+        </div>
+
         <div class="result" aria-live="polite">
           <h2>Chance of passing by guessing</h2>
           <strong id="probability">--</strong>
@@ -199,6 +211,7 @@
       const itemsNum = document.getElementById("itemsNum");
       const options = document.getElementById("options");
       const optionsNum = document.getElementById("optionsNum");
+      const allowRounding = document.getElementById("allowRounding");
 
       const probabilityOutput = document.getElementById("probability");
       const detailsOutput = document.getElementById("details");
@@ -224,9 +237,11 @@
         return maxVal + Math.log(sum);
       }
 
-      function computeProbability(pass, n, k) {
+      function computeProbability(pass, n, k, rounding) {
         const p = 1 / k;
-        const minCorrect = Math.ceil((pass / 100) * n);
+        const effectiveCut = rounding ? pass - 0.5 : pass;
+        const minCorrect = Math.ceil((effectiveCut / 100) * n);
+
         const logs = [];
         for (let i = minCorrect; i <= n; i++) {
           logs.push(
@@ -251,11 +266,14 @@
         const pass = Number(passScore.value);
         const n = Number(items.value);
         const k = Number(options.value);
+        const rounding = allowRounding.checked;
 
-        const { prob, minCorrect } = computeProbability(pass, n, k);
+        const { prob, minCorrect } = computeProbability(pass, n, k, rounding);
         probabilityOutput.textContent = formatPercent(prob);
         detailsOutput.textContent = `Need at least ${minCorrect} correct out of ${n}.`;
-        assumptionsOutput.textContent = `Assumes random guessing (p = 1/${k}).`;
+        assumptionsOutput.textContent =
+          `Assumes random guessing (p = 1/${k}). ` +
+          (rounding ? "Rounding allowed at cut score." : "No rounding at cut score.");
       }
 
       passScore.addEventListener("input", () => sync(passScore, passScoreNum));
@@ -264,6 +282,7 @@
       itemsNum.addEventListener("input", () => sync(itemsNum, items));
       options.addEventListener("input", () => sync(options, optionsNum));
       optionsNum.addEventListener("input", () => sync(optionsNum, options));
+      allowRounding.addEventListener("change", update);
 
       update();
     </script>
