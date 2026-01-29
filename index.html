@@ -197,6 +197,8 @@
           <div class="note" id="details"></div>
           <div class="note" id="assumptions"></div>
         </div>
+        <div class="note" id="discrimination"></div>
+
       </section>
 
       <footer>
@@ -253,6 +255,13 @@
         return { prob: Math.exp(logSumExp(logs)), minCorrect };
       }
 
+      function minDifference95(n, k) {
+        const p = 1 / k;
+        const sd = Math.sqrt(n * p * (1 - p));
+        return Math.ceil(1.96 * sd);
+      }
+
+
       function formatPercent(x) {
         return Number.isFinite(x) ? `${(x * 100).toFixed(1)}%` : "--";
       }
@@ -267,14 +276,19 @@
         const n = Number(items.value);
         const k = Number(options.value);
         const rounding = allowRounding.checked;
-
+      
         const { prob, minCorrect } = computeProbability(pass, n, k, rounding);
         probabilityOutput.textContent = formatPercent(prob);
         detailsOutput.textContent = `Need at least ${minCorrect} correct out of ${n}.`;
         assumptionsOutput.textContent =
           `Assumes random guessing (p = 1/${k}). ` +
           (rounding ? "Rounding allowed at cut score." : "No rounding at cut score.");
+      
+        const delta = minDifference95(n, k);
+        document.getElementById("discrimination").textContent =
+          `At least ${delta} points difference is needed to confidently distinguish two students (95% confidence).`;
       }
+
 
       passScore.addEventListener("input", () => sync(passScore, passScoreNum));
       passScoreNum.addEventListener("input", () => sync(passScoreNum, passScore));
